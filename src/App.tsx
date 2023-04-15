@@ -75,7 +75,6 @@ const App: Component = () => {
         <section id="flow">
           <Show
             when={signedIn()}
-            keyed={true}
             fallback={<button onclick={toggleSignedIn}>Sign in</button>}
           >
             <button onclick={toggleSignedIn}>Sign out</button>
@@ -109,10 +108,10 @@ const App: Component = () => {
           </ul>
 
           <Switch fallback={<p>{count()} is not dividable by either 5 or 2</p>}>
-            <Match keyed={true} when={count() % 5 === 0}>
+            <Match when={count() % 5 === 0}>
               <p>{count()} is dividable by 5</p>
             </Match>
-            <Match when={count() % 2 === 0} keyed={true}>
+            <Match when={count() % 2 === 0}>
               <p>{count()} is dividable by 2</p>
             </Match>
           </Switch>
@@ -134,7 +133,7 @@ const App: Component = () => {
 
         <section id="general">
           <p>Das ist mein Counter: {count()}</p>
-          <p>Das ist mein doppelter Counter: {doubleCount}</p>
+          <p>Das ist mein doppelter Counter: {doubleCount()}</p>
           <p>Das ist meine fib: {fib()}</p>
           <p>Das ist meine fib: {fib()}</p>
           <p>Das ist meine fib: {fib()}</p>
