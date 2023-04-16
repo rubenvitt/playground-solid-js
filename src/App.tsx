@@ -1,7 +1,4 @@
 import type { Component } from "solid-js";
-
-import logo from "./logo.svg";
-import styles from "./App.module.css";
 import {
   createEffect,
   createMemo,
@@ -10,9 +7,11 @@ import {
   For,
   Index,
   Match,
+  onMount,
   Show,
   Switch,
 } from "solid-js";
+import styles from "./App.module.css";
 import { Dynamic } from "solid-js/web";
 import { Broken } from "./Broken";
 
@@ -30,6 +29,11 @@ const options = {
   green: GreenThing,
   blue: BlueThing,
 };
+
+interface Photo {
+  thumbnailUrl: string;
+  title: string;
+}
 
 const App: Component = () => {
   const [count, setCount] = createSignal(0);
@@ -63,8 +67,14 @@ const App: Component = () => {
     "red" | "green" | "blue"
   >("red");
 
-  // @ts-ignore
-  // @ts-ignore
+  const [photos, setPhotos] = createSignal<Photo[]>([]);
+  onMount(async () => {
+    const res = await fetch(
+      "https://jsonplaceholder.typicode.com/photos?_limit=20"
+    );
+    setPhotos(await res.json());
+  });
+
   return (
     <div class={styles.App}>
       <ErrorBoundary fallback={(err: Error) => err.message}>
@@ -72,6 +82,17 @@ const App: Component = () => {
       </ErrorBoundary>
 
       <section class={styles.header}>
+        <section id="lifecycle">
+          <For each={photos()} fallback={<p>Loading</p>}>
+            {(photo) => (
+              <figure>
+                <img src={photo.thumbnailUrl} alt={photo.title} />
+                <figcaption>{photo.title}</figcaption>
+              </figure>
+            )}
+          </For>
+        </section>
+
         <section id="flow">
           <Show
             when={signedIn()}
